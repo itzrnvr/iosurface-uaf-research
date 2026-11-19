@@ -1,0 +1,20 @@
+name: uaf-safety-test
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: macos-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - name: environment
+        run: |
+          sw_vers
+          uname -m
+          sysctl -n hw.memsize | awk '{print $1/1073741824 " GB RAM"}'
+      - name: build
+        run: bash build.sh
+      - name: run-harness
+        run: ./uaf
