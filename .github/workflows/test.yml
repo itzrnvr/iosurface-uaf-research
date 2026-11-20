@@ -5,12 +5,17 @@ on:
 
 jobs:
   test:
-    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, macos-26]
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 8
     steps:
       - uses: actions/checkout@v4
       - name: environment
         run: |
+          echo "RUNNER_OS_LABEL=${{ matrix.os }}"
           sw_vers
           uname -m
           sysctl -n hw.memsize | awk '{print $1/1073741824 " GB RAM"}'
